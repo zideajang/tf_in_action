@@ -3,6 +3,14 @@
 """
 """
 import tensorflow as tf
+
+# 定义超参数
+EPOCHS = 100
+BATCH_SIZE = 128
+LEARNING_RATE = 0.0002
+BETA_1 = 0.5
+
+
 # 定义判别器模型
 
 def discriminator_model():
@@ -69,7 +77,15 @@ def generator_model():
     return model
 
 
+# 构造一个 Sequential 对象，包含一个生成器和一个判别器
+# 输入 -> 生成器 -> 判别器 -> 输出
+def generator_containing_discriminator(generator,discriminator):
+    model = tf.keras.models.Sequential()
+    model.add(generator)
+    discriminator.trainable = False #初始时判别器是不可被训练
+    model.add(discriminator)
 
+    return model
 
 
 
