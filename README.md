@@ -11,11 +11,165 @@
 
 ## 基础
 ## 线性回归
-## 多层感知机
+## 多层感知机(MLP)
+层与层连接使用权重和偏置来进行连接
 ## 卷积神经网络
+### 应用
+- 图像识别
+- 迁移学习
 ## 经典神经网络
 ### 
-## 循环神经网络
+## 循环神经网络(RNN)
+### 应用
+- 机器翻译
+- 问答系统
+- 智能音箱（聊天机器）
+- 通过学习谱曲和作词
+
+### 为什么需要神经网络
+- 是为了解决时间相关的序列数据问题
+- 有些问题是现有的卷积神经网无法解决，因为卷积神经网用于解决空间问题而非时间上序列的问题。
+- 对于长短不一数据也是 MLP 无法处理的。也可以通过补位(padding)来对数据进行处理
+- 共享参数
+![共享参数](https://upload-images.jianshu.io/upload_images/8207483-2d378b88cd36faae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![RNN展开](https://upload-images.jianshu.io/upload_images/8207483-0ac1aa5e5871c5be.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+为了增加神经网深度，并且降低参数。
+
+### 参数共享、动态系统
+### 带输入的动态系统
+$$ s^{(t)} = f(s^{(t-1)};\theta)$$
+$$ h^{(t)} = f(h^{(t-1)},x^{(t)};\theta)$$
+### 标准循环神经网络
+- 输入 x 和输出 y 都是向量的序列
+
+$$ a^{(t)} = b + Wh^{(t-1)} + Ux^{(t)} $$
+
+隐藏层的类型
+- 原始的 RNN 结构会出现梯度消失和梯度爆炸的问题
+- 使用LSTM和GRU可以避免这些问题
+
+### 序列映射到向量
+- 情感分析(Sentiment analysis)
+### 增加输出与隐藏状态的联系
+- 词性标志(Part of Speech tagging 或 POS tagging)
+### 向量映射到为序列
+- 图像语义分析(image captioning)
+
+## 语言模型
+### 语言模型(Word Embedding)
+- Non-NN 模型
+- NNLM
+- Word2Vec
+- ELMo
+- BERT
+- TF-hub
+- Bert As Service
+
+### 为什么需要
+- 输入特征需要进行数值转换，unicode 编码就是词的 id 并不包含词语义上相关性，如果我们需要考虑词与词的相关性时候。我们掌握了一个词汇其实就是掌握了符号与语义的映射。这是我们日积月累得出
+### One Hot Encodiing
+- 本质就是一个向量
+- 是一个全体词量大小维度的向量，其中只有一个位置为 1 其他都是 0 来表示一个单词
+- 问题是维度比较大，并且没有语义。
+- 而且要是做向量乘法，计算量也是非常大
+- 每一个向量都是独立正交的。
+
+### Bag-of-Words(Bow) 模型
+- 词袋模型是把一个句子中出现的单词次数进行统计
+- <word,count> map
+- 就可以比较两个向量，通过 cos 也就是两个向量夹角来比较两个向量的相似度
+- TF-IDF 如果在文章比较稀有说明单词比较重要。
+
+### 基于神经网(NNLM)
+- one-hot 编码和 BoW 编码其实都是相互独立，都是向量正交
+- 其实我们把一些单词尽心归类，例如单词不同时态
+    - 名称
+    - 形容词
+
+- 示例,这个比较经典
+[girl,woman,boy,man]
+
+|  | 0 | 1 |
+| ------ | ------ | ------ |
+| gender | female | male |
+| age | child | adult |
+
+- 其实 $f$ 就是说我们的 word embedding，手动标记，自然语言难就在于其多义性
+- 我们需要让计算机来学习这些不同维度，
+- 需要使用非监督学习，可以使用 GAN 来实现 autoencoder 来获取  z 也就是获取一定维度向量来表示词
+
+### NNLM(Nenural Network Base)
+- 通过上下文，根据上文推测下文，作为副产物用于训练 word embedding
+
+### Word2Vec
+- 2013 有 google 的大神 Tomas Mikolov Jeffrey Dean
+- 类似于 NNLM 但是关注 word embedding
+- 两种方式
+    - 持续 Bag-of-Word(CBOW)
+    - 持续 Skip-gram (Skip-gram)
+#### CBOW
+- 单词是在上下文中才有意义
+
+### GloVe
+- Global Vectors for Word Representation
+- 上下文并不是限于一定范围，而是放大全文
+- 无法实现在线训练
+
+### ELMo
+- 在 2018 年出现了 ELMo 解决自然语言痛点的多义词。
+- 在 ELMo 之前 word embedding 都是静态
+- 在 ELMo 提供我们一些变量，可以得到动态的 embedding
+- 至少需要 2 层 LSTM 来得到 3 个 embedding
+- 从上文预测目标词，从下文来预测目标词，是双向的来训练模型
+- 通过调整三个 embedding 的权重来动态改变单词的向量
+- 所以现在的 embedding 是预训练需要我们自己网络使用 fine tuning
+
+### BERT
+- Transform 采取特征提取器
+- Attention Is All You Need
+- OpenAI GPT
+
+### 
+
+## Transform
+- Seq2Seq model 特别 Self-attention
+### Self-attention 
+- q: $ q^i = W_i a^i $
+
+- 拿每一个 query q 去对每一个 k 做 attention
+- $$ a_{1,i} =  \frac{q^1 \cdot k^i}{ \sqrt{d}}  $$
+  q 和 k 多点乘后variance 越大，
+- 做 softmax 
+    - $$\hat{\alpha} = $$
+- $$ b^1 = \sum_i \hat{\alpha}_{1,i} v^i$$
+
+### Sequence
+- RNN 不容易被并行化，这个应该很好理解
+- 用 CNN 代替 RNN
+
+
+
+#### 计算成本高
+- Huffman 编码和 Softmax 归一化运算量比较大
+- 负采样
+    we play game(neg:eat)
+- softmax 和 sigmoid 神经网引入激励函数
+
+#### 向量空间
+France - Paris + Beijing = China 
+可以做一些文字间的加减法
+
+
+#### Skip-gram
+
+
+
+
+### 循环神经网络
+### 多层网络与双向网络
+### 长短期记忆网络(LSTM)
 ## STML
 ## 对抗神经网络
 
