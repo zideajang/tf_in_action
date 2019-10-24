@@ -70,11 +70,39 @@ $$ a^{(t)} = b + Wh^{(t-1)} + Ux^{(t)} $$
 ### 为什么需要
 - 输入特征需要进行数值转换，unicode 编码就是词的 id 并不包含词语义上相关性，如果我们需要考虑词与词的相关性时候。我们掌握了一个词汇其实就是掌握了符号与语义的映射。这是我们日积月累得出
 ### One Hot Encodiing
-- 本质就是一个向量
-- 是一个全体词量大小维度的向量，其中只有一个位置为 1 其他都是 0 来表示一个单词
+```python
+apple = [1,0,0,0,0]
+bag = [0,1,0,0,0]
+cat = [0,0,1,0,0]
+dog = [1,0,0,1,0]
+elephant = [0,0,0,0,1]
+```
+- 本质就是通过一个唯一 id 表示词汇并彼此区分
+- One-Hot 是一个全体词量大小维度的向量，其中只有一个位置为 1 其他都是 0 来表示一个单词
 - 问题是维度比较大，并且没有语义。
 - 而且要是做向量乘法，计算量也是非常大
-- 每一个向量都是独立正交的。
+- One-Hot 编码的缺点是显而易见，也就是无法表示词与词之间的关系，本质上每一个向量都是独立正交的。
+
+### Word Class
+
+| class1 | class2 | class3 |
+| ------- | ------- | ------- |
+| dog cat bird | ran jumped walk | flower tree apple |
+
+### Word Embedding
+- 每一个词汇都用向量来表示，语义相同他们向量比较接近
+
+### 多义词
+- Have you paid that money to the **bank** yet?
+- It is safest to deposit your money in the **bank**.
+- river bank
+- They stood on the river **bank** to fish.
+
+不同的 token 同样词类型，不同 token 同样词类型也可能有相同意思，语义是比较微妙的。
+我们希望每一个 token 都有一个 embedding，通过单词上下文给
+### Contextualized word Embedding
+
+
 
 ### Bag-of-Words(Bow) 模型
 - 词袋模型是把一个句子中出现的单词次数进行统计
@@ -117,8 +145,9 @@ $$ a^{(t)} = b + Wh^{(t-1)} + Ux^{(t)} $$
 - 上下文并不是限于一定范围，而是放大全文
 - 无法实现在线训练
 
-### ELMo
+### ELMo(Embeddings from Language Model)
 - 在 2018 年出现了 ELMo 解决自然语言痛点的多义词。
+- 通过学习来预测下一个单词
 - 在 ELMo 之前 word embedding 都是静态
 - 在 ELMo 提供我们一些变量，可以得到动态的 embedding
 - 至少需要 2 层 LSTM 来得到 3 个 embedding
